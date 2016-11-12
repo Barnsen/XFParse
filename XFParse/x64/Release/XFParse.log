@@ -1,0 +1,6 @@
+﻿  Code wird generiert.
+c:\users\vincent\desktop\xparse\xfparse\xfparse.h(80): warning C4715: "XFParse::GetElement": Nicht alle Steuerelementpfade geben einen Wert zurück.
+  All 298 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Codegenerierung ist abgeschlossen.
+  XFParse.vcxproj -> C:\Users\Vincent\Desktop\XParse\XFParse\XFParse\..\XFParse.exe
+  XFParse.vcxproj -> ..\XFParse.pdb (Full PDB)
