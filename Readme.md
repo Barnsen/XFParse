@@ -15,8 +15,8 @@ Simply include the xfparse header.
 
 Using xfparse is very easy.
 
-```
 The following txt file :
+```
 < Name : John >
 < Age : 12 >
 < Day : Monday >
