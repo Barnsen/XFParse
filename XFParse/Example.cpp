@@ -26,7 +26,14 @@ int main()
 	cout << Prec << endl;
 
 	cout << "Setting a new age now!" << endl;
-	parse.SetElement("Age", "222");
+	if (parse.SetElement("Age", "4444"))
+	{
+		cout << "Successfully set Element" << endl;
+	}
+	else
+	{
+		cout << "Failed to set element the proper way " << endl;
+	}
 
 	cout << "Testing bool !" << endl;
 
@@ -43,5 +50,7 @@ int main()
 
 	parse.SetNewElement("OldJack", "80");
 	
+	parse.refresh();
+
 	system("pause");
 }

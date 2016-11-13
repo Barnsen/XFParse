@@ -1,0 +1,5 @@
+< Name : John >
+< Age : 12 >
+< Day : Monday >
+< Happy : True >
+< Precision : 0.01 >

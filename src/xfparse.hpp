@@ -71,6 +71,8 @@ private:
 	std::string openfile = "FF";
 	std::vector < std::string > catche;
 
+	int hitvalue = 0;
+
 	bool catcheexists = false;
 	bool generatedbefore = false;
 
@@ -103,18 +105,6 @@ private:
 				iter++;
 		}
 	}
-/*	template <
-		template<typename U, typename V, typename... Args> class ObjectType = std::map,
-		template<typename U, typename... Args> class ArrayType = std::vector,
-		class StringType = std::string,
-		class BooleanType = bool,
-		class NumberIntegerType = std::int64_t,
-		class NumberUnsignedType = std::uint64_t,
-		class NumberFloatType = double,
-		template<typename U> class AllocatorType = std::allocator
-	>
-	using xboolean = BooleanType;
-	*/
 public:
 	bool open(char * filename)
 	{
@@ -155,19 +145,19 @@ public:
 				for (std::string line : token)
 				{
 						// Process str
-						if (strstr(line.c_str(), element.c_str()))
-						{
-							//delete all spaces
-							line.erase(std::remove_if(line.begin(), line.end(), std::isspace), line.end());
+					if (strstr(line.c_str(), element.c_str()))
+					{
+						//delete all spaces
+						line.erase(std::remove_if(line.begin(), line.end(), std::isspace), line.end());
 
-							//remove the "< and >" //we can use the static numbers regardless
-							//cause we wont have any spaces anyway anymore.
-							std::string removebrakets = line.substr(1, line.length() - 2);
+						//remove the "< and >" //we can use the static numbers regardless
+						//cause we wont have any spaces anyway anymore.
+						std::string removebrakets = line.substr(1, line.length() - 2);
 							
-							//find pos of ":"
-							//return line.substr(line.find(":") + 1, line.length() - 1);
-							return removebrakets.substr(removebrakets.find(":") + 1, removebrakets.length() - 1);
-						}}}
+						//find pos of ":"
+						//return line.substr(line.find(":") + 1, line.length() - 1);
+						return removebrakets.substr(removebrakets.find(":") + 1, removebrakets.length() - 1);
+					}}}
 	}
 	/*
 	  Variable Conversions.
@@ -195,7 +185,6 @@ public:
 	}
 	/*
 		Set Current Var to new value
-		TODO : save position of variable in file.
 	*/
 	template <typename T>
 	bool SetElement(std::string element, T newvar)
@@ -208,35 +197,45 @@ public:
 			//write whole file into catche
 			if (!catcheexists)
 			{
-				int count = 0;
 				while (std::getline(file, line))
 				{
 					catche.push_back(line);
-					count++;
 				}
 				catcheexists = true;
 			}
 
-			//rebuild file without old line and 
-			//insert new (changed) line
-			for (std::string a : catche)
+			//the catche has the file in it line by line from top.
+
+			if (element != GetElement(element))
 			{
-				if (strstr(a.c_str(), element.c_str()))
+				//rebuild file without old line and 
+				//insert new (changed) line
+				int count = 0, found = 0, process = 0;
+
+				std::cout << "Listing vector table" << std::endl;
+
+				for (std::string a : catche)
 				{
-					
-					erase(catche, a);
-
-					replace(a, GetElement(element), newvar);
-
-					catche.push_back(a);
-
-					std::ofstream off(openfile);
-					for (std::string b : catche)
+					count++;
+					if (strstr(a.c_str(), element.c_str()))
 					{
-						off << b << std::endl;
-					}
-					off.close();
-				}} return true;}
+
+						std::string b = a;
+						replace(b, GetElement(element), newvar);
+
+						std::replace(catche.begin(), catche.end(), a, b);
+		
+		
+						std::ofstream off(openfile);
+						for (std::string a : catche)
+						{
+							off << a << std::endl;
+						}
+						off.close();
+					}} return true ; } 
+				else
+				return false;
+		}
 		return false;
 	}
 	/*

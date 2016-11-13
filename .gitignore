@@ -7,6 +7,12 @@ ehthumbs.db
 *.ipdb
 *.pdb
 
+# Project Databases
+*.db
+
+# Executables
+*.exe
+
 # Folder config file
 Desktop.ini
 
