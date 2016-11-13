@@ -3,9 +3,9 @@ Thumbs.db
 ehthumbs.db
 
 # Project Debug Files
-XFParse.iobj
-XFParse.ipdb
-XFParse.pdb
+*.iobj
+*.ipdb
+*.pdb
 
 # Folder config file
 Desktop.ini

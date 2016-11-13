@@ -6,6 +6,16 @@
 #include <algorithm>
 #include <cctype>
 #include <iostream>
+#include <limits>
+
+/*
+
+	This is XFParse. A simple to use fileparser.
+
+	(C) Force67 2016
+*/
+
+#undef max
 
 class XFParse
 {
@@ -25,13 +35,40 @@ private:
 	}
 	std::vector < std::string > token;
 	std::string openfile = "FF";
+	std::vector < std::string > catche;
+
+	bool catcheexists = false;
 	bool generatedbefore = false;
+	bool is_empty(std::string open)
+	{
+		std::ifstream pFile(open);
+		return pFile.peek() == std::ifstream::traits_type::eof();
+	}
+	bool replace(std::string& str, const std::string& from, const std::string& to) {
+		size_t start_pos = str.find(from);
+		if (start_pos == std::string::npos)
+			return false;
+		str.replace(start_pos, from.length(), to);
+		return true;
+	}
+	void erase(std::vector<string>& v, string str)
+	{
+		std::vector<string>::iterator iter = v.begin();
+
+		while (iter != v.end())
+		{
+			if (*iter == str)
+				iter = v.erase(iter);
+			else
+				iter++;
+		}
+	}
 public:
 	bool open(char * filename)
 	{
-		if (Exists(filename))
+		std::string a(filename);
+		if (Exists(filename) && !is_empty(a))
 		{
-			std::string a(filename);
 			openfile = a;
 			return true;
 		}
@@ -39,12 +76,15 @@ public:
 	}
 	void refresh()
 	{
+		token.clear();
+		catche.clear();
 		generatedbefore = false;
+		catcheexists = false;
 	}
 	std::string GetElement(std::string element)
 	{
 			//if its opened
-			if (openfile != "FF")
+			if (openfile != "FF" && !is_empty(openfile))
 			{
 				std::ifstream file(openfile);
 				std::string str;
@@ -68,15 +108,11 @@ public:
 
 							//remove the "< and >" //this is not ideal yet
 							std::string removebrakets = line.substr(1, line.length() - 2);
-
+							
 							//find pos of ":"
-
-							std::string bformat = removebrakets.substr(removebrakets.find(":") + 1, removebrakets.length() - 1);
-							return bformat;
-				
-				}
-			}
-		}
+							//return line.substr(line.find(":") + 1, line.length() - 1);
+							return removebrakets.substr(removebrakets.find(":") + 1, removebrakets.length() - 1);
+						}}}
 	}
 	/*
 	  Variable Conversions.
@@ -93,4 +129,72 @@ public:
 	{
 		return ::atof(GetElement(element).c_str());
 	}
+	/*
+		Set Current Var to new value
+		TODO : save position of variable in file.
+	*/
+	template <typename T>
+	bool SetElement(std::string element, T newvar)
+	{
+		if (openfile != "FF" && !is_empty(openfile))
+		{
+			std::ifstream file(openfile);
+			std::string line;
+
+			if (!catcheexists)
+			{
+				int count = 0;
+				while (std::getline(file, line))
+				{
+					catche.push_back(line);
+					count++;
+				}
+				catcheexists = true;
+			}
+			for (std::string a : catche)
+			{
+				if (strstr(a.c_str(), element.c_str()))
+				{
+					
+					erase(catche, a);
+
+					replace(a, GetElement(element), newvar);
+
+					catche.push_back(a);
+
+					std::ofstream off(openfile);
+					for (std::string b : catche)
+					{
+						off << b << std::endl;
+					}
+					off.close();
+				}}}
+	}
+	/*
+		Set new value
+		TODO: finish
+	*/
+	template <typename R>
+	bool SetNewElement(std::string newelement, R newvar)
+	{
+		if (openfile != "FF" && !is_empty(openfile))
+		{
+			std::ifstream file(openfile);
+			std::string line;
+
+			if (!catcheexists)
+			{
+				int count = 0;
+				while (std::getline(file, line))
+				{
+					catche.push_back(line);
+					count++;
+				}
+				catcheexists = true;
+			}
+		//	std::string firstline = 
+			
+		}
+	}
+
 };
