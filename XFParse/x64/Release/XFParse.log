@@ -1,9 +1,8 @@
 ﻿  Example.cpp
   Code wird generiert.
-c:\users\vincent\desktop\xparse\xfparse\xfparse.h(161): warning C4715: "XFParse::SetElement<char const * __ptr64>": Nicht alle Steuerelementpfade geben einen Wert zurück.
-  2 of 335 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
+  2 of 330 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    11 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   Codegenerierung ist abgeschlossen.
   XFParse.vcxproj -> C:\Users\Vincent\Desktop\XParse\XFParse\XFParse\..\XFParse.exe
   XFParse.vcxproj -> ..\XFParse.pdb (Full PDB)

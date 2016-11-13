@@ -25,10 +25,21 @@ int main()
 	float Prec = parse.GetFloatElement("Precision");
 	cout << Prec << endl;
 
-	cout << "Setting a new age now!" << std::endl;
-	parse.SetElement("Age", "13");
+	cout << "Setting a new age now!" << endl;
+	parse.SetElement("Age", "222");
 
-	cout << "Creating new Element!" << std::endl;
+	cout << "Testing bool !" << endl;
+
+	if (parse.GetBoolElement("Happy"))
+	{
+		cout << "Its a good day " << endl;
+	}
+	else
+	{
+		cout << "Its a bad day " << endl;
+	}
+
+	cout << "Creating new Element!" << endl;
 
 	parse.SetNewElement("OldJack", "80");
 	

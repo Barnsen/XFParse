@@ -29,6 +29,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifndef XFPARSE
+#define XFPARSE
+
 #include <sstream>
 #include <fstream>
 #include <vector>
@@ -36,6 +39,10 @@ SOFTWARE.
 #include <cctype>
 #include <iostream>
 #include <limits>
+
+#ifndef OR 
+#define OR ||
+#endif OR
 
 //needed to not cause errors 
 #undef max
@@ -96,7 +103,7 @@ private:
 				iter++;
 		}
 	}
-	template <
+/*	template <
 		template<typename U, typename V, typename... Args> class ObjectType = std::map,
 		template<typename U, typename... Args> class ArrayType = std::vector,
 		class StringType = std::string,
@@ -107,7 +114,7 @@ private:
 		template<typename U> class AllocatorType = std::allocator
 	>
 	using xboolean = BooleanType;
-
+	*/
 public:
 	bool open(char * filename)
 	{
@@ -153,7 +160,8 @@ public:
 							//delete all spaces
 							line.erase(std::remove_if(line.begin(), line.end(), std::isspace), line.end());
 
-							//remove the "< and >" //this is not ideal yet
+							//remove the "< and >" //we can use the static numbers regardless
+							//cause we wont have any spaces anyway anymore.
 							std::string removebrakets = line.substr(1, line.length() - 2);
 							
 							//find pos of ":"
@@ -175,6 +183,15 @@ public:
 	double GetDoubleElement(std::string element)
 	{
 		return ::atof(GetElement(element).c_str());
+	}
+	bool GetBoolElement(std::string element)
+	{
+		std::string result = GetElement(element);
+		if (result == "true" OR result == "True")
+		{
+			return true;
+		}
+		return false;
 	}
 	/*
 		Set Current Var to new value
@@ -219,7 +236,8 @@ public:
 						off << b << std::endl;
 					}
 					off.close();
-				}}}
+				}} return true;}
+		return false;
 	}
 	/*
 		Set new value
@@ -249,3 +267,5 @@ public:
 	}
 
 };
+
+#endif XFPARSE
