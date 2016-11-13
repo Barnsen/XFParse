@@ -15,7 +15,7 @@ Simply include the xfparse header.
 
 Using xfparse is very easy.
 
-The following txt file :
+These values in our example.txt file :
 ```
 < Name : John >
 < Age : 12 >
@@ -23,7 +23,7 @@ The following txt file :
 < Precision : 0.01 >
 ```
 
-Can be Read Like This :
+Getting values:
 
 ```
 XFParse parse;
@@ -31,12 +31,14 @@ XFParse parse;
 parse.open("myfile.txt");
 
 std::string mystring = parse.GetElement("Name");
-```
 
-numbers can be read like this :
-
-```
 int myint = parse.GetIntElement("Age");
+```
+
+Setting values:
+
+```
+parse.SetElement("Age", "13");
 ```
 
 ## Contributing
