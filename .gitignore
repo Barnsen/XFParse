@@ -7,6 +7,10 @@ ehthumbs.db
 *.ipdb
 *.pdb
 
+# Not needed Log Files
+*.tlog
+*.log
+
 # Project Databases
 *.db
 

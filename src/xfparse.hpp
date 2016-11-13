@@ -210,13 +210,8 @@ public:
 			{
 				//rebuild file without old line and 
 				//insert new (changed) line
-				int count = 0, found = 0, process = 0;
-
-				std::cout << "Listing vector table" << std::endl;
-
 				for (std::string a : catche)
 				{
-					count++;
 					if (strstr(a.c_str(), element.c_str()))
 					{
 
@@ -224,7 +219,6 @@ public:
 						replace(b, GetElement(element), newvar);
 
 						std::replace(catche.begin(), catche.end(), a, b);
-		
 		
 						std::ofstream off(openfile);
 						for (std::string a : catche)
@@ -252,15 +246,28 @@ public:
 
 			if (!catcheexists)
 			{
-				int count = 0;
 				while (std::getline(file, line))
 				{
 					catche.push_back(line);
-					count++;
 				}
 				catcheexists = true;
 			}
-		//	std::string firstline = 
+			//get first line of file and copy newvar in temp
+			std::ifstream iff(openfile);
+			std::string temp;
+			std::getline(iff, temp);
+
+			//todo make mask and place value + copy
+
+
+			//add new line at end of file
+			std::ofstream off(openfile);
+			for (std::string a : catche)
+			{
+				off << a << std::endl;
+			}
+			off << temp << std::endl;
+			off.close();
 			
 		}
 	}
