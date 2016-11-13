@@ -9,7 +9,7 @@ using std::cout;
 using std::endl;
 using std::string;
 
-#include "..\xfparse.h"
+#include "..\src\xfparse.hpp"
 
 XFParse parse;
 
@@ -31,6 +31,6 @@ int main()
 	cout << "Creating new Element!" << std::endl;
 
 	parse.SetNewElement("OldJack", "80");
-
+	
 	system("pause");
 }

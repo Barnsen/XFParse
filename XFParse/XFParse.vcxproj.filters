@@ -4,6 +4,6 @@
     <ClCompile Include="Example.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\xfparse.h" />
+    <ClInclude Include="..\src\xfparse.hpp" />
   </ItemGroup>
 </Project>

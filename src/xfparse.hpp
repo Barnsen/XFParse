@@ -1,5 +1,34 @@
 #pragma once
 
+/*     __                           
+__  __/ _|_ __   __ _ _ __ ___  ___ 
+\ \/ / |_| '_ \ / _` | '__/ __|/ _ \  XFParse
+ >  <|  _| |_) | (_| | |  \__ \  __/  https://github.com/Force67/XFParse
+/_/\_\_| | .__/ \__,_|_|  |___/\___|
+         |_|         
+
+Licensed under the MIT License <http://opensource.org/licenses/MIT>.
+Copyright (c) 2016 Force67.
+
+Permission is hereby  granted, free of charge, to any  person obtaining a copy
+of this software and associated  documentation files (the "Software"), to deal
+in the Software  without restriction, including without  limitation the rights
+to  use, copy,  modify, merge,  publish, distribute,  sublicense, and/or  sell
+copies  of  the Software,  and  to  permit persons  to  whom  the Software  is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE  IS PROVIDED "AS  IS", WITHOUT WARRANTY  OF ANY KIND,  EXPRESS OR
+IMPLIED,  INCLUDING BUT  NOT  LIMITED TO  THE  WARRANTIES OF  MERCHANTABILITY,
+FITNESS FOR  A PARTICULAR PURPOSE AND  NONINFRINGEMENT. IN NO EVENT  SHALL THE
+AUTHORS  OR COPYRIGHT  HOLDERS  BE  LIABLE FOR  ANY  CLAIM,  DAMAGES OR  OTHER
+LIABILITY, WHETHER IN AN ACTION OF  CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 #include <sstream>
 #include <fstream>
 #include <vector>
@@ -8,22 +37,18 @@
 #include <iostream>
 #include <limits>
 
-/*
-
-	This is XFParse. A simple to use fileparser.
-
-	(C) Force67 2016
-*/
-
+//needed to not cause errors 
 #undef max
 
 class XFParse
 {
 private:
+	/// Is number ?
 	bool is_digits(const std::string &str)
 	{
 		return str.find_first_not_of("0123456789") == std::string::npos;
 	}
+	/// Does file exist ?
 	bool Exists(char * file)
 	{
 		struct stat fileStat;
@@ -33,17 +58,23 @@ private:
 		}
 		return false;
 	}
+
+	//values
 	std::vector < std::string > token;
 	std::string openfile = "FF";
 	std::vector < std::string > catche;
 
 	bool catcheexists = false;
 	bool generatedbefore = false;
+
+	///is file null
 	bool is_empty(std::string open)
 	{
 		std::ifstream pFile(open);
 		return pFile.peek() == std::ifstream::traits_type::eof();
 	}
+
+	//replace given text at given pos
 	bool replace(std::string& str, const std::string& from, const std::string& to) {
 		size_t start_pos = str.find(from);
 		if (start_pos == std::string::npos)
@@ -51,6 +82,8 @@ private:
 		str.replace(start_pos, from.length(), to);
 		return true;
 	}
+
+	//delete string from stringvector
 	void erase(std::vector<string>& v, string str)
 	{
 		std::vector<string>::iterator iter = v.begin();
@@ -63,6 +96,18 @@ private:
 				iter++;
 		}
 	}
+	template <
+		template<typename U, typename V, typename... Args> class ObjectType = std::map,
+		template<typename U, typename... Args> class ArrayType = std::vector,
+		class StringType = std::string,
+		class BooleanType = bool,
+		class NumberIntegerType = std::int64_t,
+		class NumberUnsignedType = std::uint64_t,
+		class NumberFloatType = double,
+		template<typename U> class AllocatorType = std::allocator
+	>
+	using xboolean = BooleanType;
+
 public:
 	bool open(char * filename)
 	{
@@ -74,6 +119,7 @@ public:
 		}
 		return false;
 	}
+	//refresh the value containers
 	void refresh()
 	{
 		token.clear();
@@ -81,6 +127,7 @@ public:
 		generatedbefore = false;
 		catcheexists = false;
 	}
+	//get value as string
 	std::string GetElement(std::string element)
 	{
 			//if its opened
@@ -141,6 +188,7 @@ public:
 			std::ifstream file(openfile);
 			std::string line;
 
+			//write whole file into catche
 			if (!catcheexists)
 			{
 				int count = 0;
@@ -151,6 +199,9 @@ public:
 				}
 				catcheexists = true;
 			}
+
+			//rebuild file without old line and 
+			//insert new (changed) line
 			for (std::string a : catche)
 			{
 				if (strstr(a.c_str(), element.c_str()))
