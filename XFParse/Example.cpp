@@ -11,6 +11,10 @@ using std::string;
 
 #include "..\src\xfparse.hpp"
 
+//now with namespace...
+using namespace XFP;
+
+//parser instance.
 XFParse parse;
 
 int main()

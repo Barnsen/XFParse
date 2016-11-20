@@ -47,86 +47,97 @@ SOFTWARE.
 //needed to not cause errors 
 #undef max
 
-class XFParse
-{
-private:
-	/// Is number ?
-	bool is_digits(const std::string &str)
+//enable multiname declarations..
+namespace XFP {
+
+	class XFParse
 	{
-		return str.find_first_not_of("0123456789") == std::string::npos;
-	}
-	/// Does file exist ?
-	bool Exists(char * file)
-	{
-		struct stat fileStat;
-		if (stat(file, &fileStat) == 0)
+		/// Is number ?
+		bool is_digits(const std::string &str)
 		{
-			return true;
+			return str.find_first_not_of("0123456789") == std::string::npos;
 		}
-		return false;
-	}
-
-	//values
-	std::vector < std::string > token;
-	std::string openfile = "FF";
-	std::vector < std::string > catche;
-
-	int hitvalue = 0;
-
-	bool catcheexists = false;
-	bool generatedbefore = false;
-
-	///is file null
-	bool is_empty(std::string open)
-	{
-		std::ifstream pFile(open);
-		return pFile.peek() == std::ifstream::traits_type::eof();
-	}
-
-	//replace given text at given pos
-	bool replace(std::string& str, const std::string& from, const std::string& to) {
-		size_t start_pos = str.find(from);
-		if (start_pos == std::string::npos)
+		/// Does file exist ?
+		bool Exists(char * file)
+		{
+			struct stat fileStat;
+			if (stat(file, &fileStat) == 0)
+			{
+				return true;
+			}
 			return false;
-		str.replace(start_pos, from.length(), to);
-		return true;
-	}
-
-	//delete string from stringvector
-	void erase(std::vector<string>& v, string str)
-	{
-		std::vector<string>::iterator iter = v.begin();
-
-		while (iter != v.end())
-		{
-			if (*iter == str)
-				iter = v.erase(iter);
-			else
-				iter++;
 		}
-	}
-public:
-	bool open(char * filename)
-	{
-		std::string a(filename);
-		if (Exists(filename) && !is_empty(a))
+
+		//values
+		std::vector < std::string > token;
+		std::string openfile = "FF";
+		std::vector < std::string > catche;
+
+		int hitvalue = 0;
+
+		bool catcheexists = false;
+		bool generatedbefore = false;
+
+		///is file null
+		bool is_empty(std::string open)
 		{
-			openfile = a;
+			std::ifstream pFile(open);
+			return pFile.peek() == std::ifstream::traits_type::eof();
+		}
+
+		//replace given text at given pos
+		bool replace(std::string& str, const std::string& from, const std::string& to) {
+			size_t start_pos = str.find(from);
+			if (start_pos == std::string::npos)
+				return false;
+			str.replace(start_pos, from.length(), to);
 			return true;
 		}
-		return false;
-	}
-	//refresh the value containers
-	void refresh()
-	{
-		token.clear();
-		catche.clear();
-		generatedbefore = false;
-		catcheexists = false;
-	}
-	//get value as string
-	std::string GetElement(std::string element)
-	{
+
+		//delete string from stringvector
+		void erase(std::vector<string>& v, string str)
+		{
+			std::vector<string>::iterator iter = v.begin();
+
+			while (iter != v.end())
+			{
+				if (*iter == str)
+					iter = v.erase(iter);
+				else
+					iter++;
+			}
+		}
+
+		template <typename type>
+		bool typematch(type, type)
+		{
+			if (std::is_same(type, type))
+				return true;
+			else
+				return false;
+		}
+	public:
+		bool open(char * filename)
+		{
+			std::string a(filename);
+			if (Exists(filename) && !is_empty(a))
+			{
+				openfile = a;
+				return true;
+			}
+			return false;
+		}
+		//refresh the value containers
+		void refresh()
+		{
+			token.clear();
+			catche.clear();
+			generatedbefore = false;
+			catcheexists = false;
+		}
+		//get value as string
+		std::string GetElement(std::string element)
+		{
 			//if its opened
 			if (openfile != "FF" && !is_empty(openfile))
 			{
@@ -144,7 +155,7 @@ public:
 				}
 				for (std::string line : token)
 				{
-						// Process str
+					// Process str
 					if (strstr(line.c_str(), element.c_str()))
 					{
 						//delete all spaces
@@ -153,125 +164,132 @@ public:
 						//remove the "< and >" //we can use the static numbers regardless
 						//cause we wont have any spaces anyway anymore.
 						std::string removebrakets = line.substr(1, line.length() - 2);
-							
+
 						//find pos of ":"
 						//return line.substr(line.find(":") + 1, line.length() - 1);
 						return removebrakets.substr(removebrakets.find(":") + 1, removebrakets.length() - 1);
-					}}}
-	}
-	/*
-	  Variable Conversions.
-	*/
-	int GetIntElement(std::string element)
-	{
-		return std::stoi(GetElement(element));
-	}
-	float GetFloatElement(std::string element)
-	{
-		return (float)::atof(GetElement(element).c_str());
-	}
-	double GetDoubleElement(std::string element)
-	{
-		return ::atof(GetElement(element).c_str());
-	}
-	bool GetBoolElement(std::string element)
-	{
-		std::string result = GetElement(element);
-		if (result == "true" OR result == "True")
-		{
-			return true;
-		}
-		return false;
-	}
-	/*
-		Set Current Var to new value
-	*/
-	template <typename T>
-	bool SetElement(std::string element, T newvar)
-	{
-		if (openfile != "FF" && !is_empty(openfile))
-		{
-			std::ifstream file(openfile);
-			std::string line;
-
-			//write whole file into catche
-			if (!catcheexists)
-			{
-				while (std::getline(file, line))
-				{
-					catche.push_back(line);
+					}
 				}
-				catcheexists = true;
 			}
+		}
+		/*
+		  Variable Conversions.
+		*/
 
-			//the catche has the file in it line by line from top.
-
-			if (element != GetElement(element))
+		int GetIntElement(std::string element)
+		{
+			return std::stoi(GetElement(element));
+		}
+		float GetFloatElement(std::string element)
+		{
+			return (float)::atof(GetElement(element).c_str());
+		}
+		double GetDoubleElement(std::string element)
+		{
+			return ::atof(GetElement(element).c_str());
+		}
+		bool GetBoolElement(std::string element)
+		{
+			std::string result = GetElement(element);
+			if (result == "true" OR result == "True")
 			{
-				//rebuild file without old line and 
-				//insert new (changed) line
+				return true;
+			}
+			return false;
+		}
+		/*
+			Set Current Var to new value
+		*/
+		template <typename T>
+		bool SetElement(std::string element, T newvar)
+		{
+			if (openfile != "FF" && !is_empty(openfile))
+			{
+				std::ifstream file(openfile);
+				std::string line;
+
+				//write whole file into catche
+				if (!catcheexists)
+				{
+					while (std::getline(file, line))
+					{
+						catche.push_back(line);
+					}
+					catcheexists = true;
+				}
+
+				//the catche has the file in it line by line from top.
+
+				if (element != GetElement(element))
+				{
+					//rebuild file without old line and 
+					//insert new (changed) line
+					for (std::string a : catche)
+					{
+						if (strstr(a.c_str(), element.c_str()))
+						{
+
+							std::string b = a;
+							replace(b, GetElement(element), newvar);
+
+							std::replace(catche.begin(), catche.end(), a, b);
+
+							std::ofstream off(openfile);
+							for (std::string a : catche)
+							{
+								off << a << std::endl;
+							}
+							off.close();
+						}
+					} return true;
+				}
+				else
+					return false;
+			}
+			return false;
+		}
+		/*
+			Set new value
+			TODO: finish
+		*/
+		template <typename R>
+		bool SetNewElement(std::string newelement, R newvar)
+		{
+			if (openfile != "FF" && !is_empty(openfile))
+			{
+				std::ifstream file(openfile);
+				std::string line;
+
+				if (!catcheexists)
+				{
+					while (std::getline(file, line))
+					{
+						catche.push_back(line);
+					}
+					catcheexists = true;
+				}
+				//get first line of file and copy newvar in temp
+				std::ifstream iff(openfile);
+				std::string temp;
+				std::getline(iff, temp);
+
+				//todo make mask and place value + copy
+
+
+				//add new line at end of file
+				std::ofstream off(openfile);
 				for (std::string a : catche)
 				{
-					if (strstr(a.c_str(), element.c_str()))
-					{
-
-						std::string b = a;
-						replace(b, GetElement(element), newvar);
-
-						std::replace(catche.begin(), catche.end(), a, b);
-		
-						std::ofstream off(openfile);
-						for (std::string a : catche)
-						{
-							off << a << std::endl;
-						}
-						off.close();
-					}} return true ; } 
-				else
-				return false;
-		}
-		return false;
-	}
-	/*
-		Set new value
-		TODO: finish
-	*/
-	template <typename R>
-	bool SetNewElement(std::string newelement, R newvar)
-	{
-		if (openfile != "FF" && !is_empty(openfile))
-		{
-			std::ifstream file(openfile);
-			std::string line;
-
-			if (!catcheexists)
-			{
-				while (std::getline(file, line))
-				{
-					catche.push_back(line);
+					off << a << std::endl;
 				}
-				catcheexists = true;
+				off << temp << std::endl;
+				off.close();
+
 			}
-			//get first line of file and copy newvar in temp
-			std::ifstream iff(openfile);
-			std::string temp;
-			std::getline(iff, temp);
-
-			//todo make mask and place value + copy
-
-
-			//add new line at end of file
-			std::ofstream off(openfile);
-			for (std::string a : catche)
-			{
-				off << a << std::endl;
-			}
-			off << temp << std::endl;
-			off.close();
-			
 		}
-	}
 
-};
+	};
+
+}
 
 #endif XFPARSE
